@@ -65,6 +65,7 @@ button {
   font-weight: bold;
   z-index: 4;
 }
+
 .game-over {
   display: none; /* Hide on page load */
 }
