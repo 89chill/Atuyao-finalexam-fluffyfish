@@ -14,6 +14,12 @@ let pipes = [];
 let score = 0;
 let gameRunning = false;
 
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  fish.radius = canvas.height * 0.04; // 4% of screen height
+}
+
 function drawFish() {
   ctx.drawImage(fishImage, fish.x - fish.radius, fish.y - fish.radius, fish.radius * 2, fish.radius * 2);
 }
@@ -21,13 +27,13 @@ function drawFish() {
 function drawPipes() {
   ctx.fillStyle = "green";
   pipes.forEach(pipe => {
-    ctx.fillRect(pipe.x, 0, 50, pipe.top);
-    ctx.fillRect(pipe.x, pipe.top + 150, 50, canvas.height - pipe.top - 150);
+    ctx.fillRect(pipe.x, 0, canvas.width * 0.12, pipe.top);
+    ctx.fillRect(pipe.x, pipe.top + 150, canvas.width * 0.12, canvas.height - pipe.top - 150);
   });
 }
 
 function detectCollision(pipe) {
-  const inPipeX = fish.x + fish.radius > pipe.x && fish.x - fish.radius < pipe.x + 50;
+  const inPipeX = fish.x + fish.radius > pipe.x && fish.x - fish.radius < pipe.x + canvas.width * 0.12;
   const hitPipe = fish.y - fish.radius < pipe.top || fish.y + fish.radius > pipe.top + 150;
   return inPipeX && hitPipe;
 }
@@ -41,7 +47,7 @@ function gameLoop() {
 
   pipes.forEach(pipe => {
     pipe.x -= 2;
-    if (pipe.x + 50 < 0) {
+    if (pipe.x + canvas.width * 0.12 < 0) {
       pipe.x = canvas.width;
       pipe.top = Math.random() * 200 + 50;
       score++;
@@ -109,3 +115,9 @@ function checkOnline() {
 window.addEventListener("online", checkOnline);
 window.addEventListener("offline", checkOnline);
 checkOnline();
+
+// Resize canvas on window resize
+window.addEventListener("resize", resizeCanvas);
+
+// Initial resize
+resizeCanvas();
